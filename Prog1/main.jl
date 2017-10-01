@@ -10,25 +10,31 @@ module Main
     sizeLarge::Integer
   end
 
+  #=
+    Searches for elem in the smaller set, then larger set using binary search.
+  =#
   function search(set::MySet, elem::Integer)::Bool
-    i = 1;
-    while(i <= set.sizeSmall)
-      if (set.small[i] == elem)
-        return true;
+    return binarySearch(set.small, set.sizeSmall, elem) || 
+      binarySearch(set.large, set.sizeLarge, elem); 
+  end
+  
+  function binarySearch(arr::Array{Integer, 1}, size::Integer, elem::Integer)::Bool
+    k = (1, size);
+    m::Integer = 0;
+    while (k[1] < k[2])
+      m = k[1] + floor((k[2] - k[1])/2)
+      if (arr[m] < elem)
+        k = (m+1, k[2])
+      else  
+        k = (k[1], m-1)
       end
-      i += 1;
     end
-    i = 1;
-    while(i <= set.sizeLarge)
-      if (set.large[i] == elem)
-        return true;
-      end
-      i += 1;
-    end
-    return false;
+    return arr[m] == elem || arr[k[1]] == elem; 
   end
 
   #=
+    Inserts element into a MySet instance, inserting into the smaller array
+    instance, or merging with the larger array instance.
   =#
   function insert(set::MySet, elem::Integer)::MySet
     if (set.sizeSmall + 1 == length(set.small))

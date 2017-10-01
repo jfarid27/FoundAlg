@@ -67,13 +67,15 @@ module Prog1Test
     k1::Array{Integer, 1} = [1, 5, 6, 7, -1, -1, -1, -1];
     l1::Array{Integer, 1} = [2, 4, -1];
     set = Main.MySet(l1, k1, 2, 4);
-    result1 = Main.search(set, 1);
-    result2 = Main.search(set, 2);
-    result3 = Main.search(set, 3);
-    result4 = Main.search(set, 4);
-    result5 = Main.search(set, 8);
-    @test result1 && result2 && result4;
-    @test !(result3 || result5);
+    @test Main.search(set, 7);
+    @test !Main.search(set, 0);
+    @test Main.search(set, 1);
+    @test Main.search(set, 2);
+    @test !Main.search(set, 3);
+    @test Main.search(set, 4);
+    @test !Main.search(set, 8);
+    @test Main.search(set, 5);
+
   end
 
   insertArray();
