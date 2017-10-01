@@ -1,4 +1,4 @@
-module Main 
+module Prog1 
 
   #=
     Main struct for the set object
