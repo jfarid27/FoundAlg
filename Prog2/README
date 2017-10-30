@@ -1,0 +1,34 @@
+# Programming Assignment 2
+
+## Code
+
+This code implements median of three quicksort, as well as quicksort with pivot
+on the last element. Some detailed functions are below. Note methods that modify
+input parameters are ended with `!`.
+
+#### medianOfThree!
+
+A function that modifies the given input a and sorts using Median of Three
+quicksort.
+
+#### quicksort!
+
+A standard quicksort implementation that selects the last element as the pivot.
+
+#### runWithRandoms
+
+A function that, when given an array of integers i:j, runs, for each k in i:j
+100 samples of random permutations of integers from 1 to k. Each sample is then
+copied and ran on quicksort and median of three, and the average of each is
+computed and added to a store array. The store arrays for both median of three
+and quicksort is returned.
+
+## Running and Plotting Output 
+
+Included in the file is a file called main.jl. Start the julia repl and run
+
+`include("main.jl")`
+
+This is required since the program requires plotting libraries to plot the output.
+If you do not wish to verify the code, the output is produced and saved as MOTvsQS.png.
+The plotted output is generated using Plotly.js, so some interactivity is included.
