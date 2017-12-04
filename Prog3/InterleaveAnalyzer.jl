@@ -44,7 +44,7 @@ module InterleaveAnalyzer
             m::Dict{Int, Transition} = Dict()
             i = 1;
             while (i < length(inputString))
-                char = inputString[i];
+                char = inputString[i+1];
                 t = Transition(char, i+1);
                 m = merge(m, Dict(i => t));
                 i += 1;
@@ -78,22 +78,13 @@ module InterleaveAnalyzer
         for instance in ndfa.stateInstances
             availableX = get(ndfa.xDFA.matrix, instance.x, nothing);
             availableY = get(ndfa.yDFA.matrix, instance.y, nothing);
-            @show instance
-            @show character
-            @show availableX
-            @show availableY
             if ((availableX !== nothing) && availableX.symbol === character)
-                @show "x"
                 push!(newInstances, DFAState(availableX.state, instance.y, instance.assignment * "x"))
             end
             if ((availableY !== nothing) && availableY.symbol === character)
-                @show "y"
                 push!(newInstances, DFAState(instance.x, availableY.state, instance.assignment * "y"))
             end
         end
-
-        @show newInstances
-        @show "+++++++++"
         ndfa.stateInstances = newInstances;
         return true;
     end
