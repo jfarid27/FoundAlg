@@ -70,23 +70,26 @@ module InterleaveAnalyzer
 
     # Takes a given character and transitions each stateInstance using the character
     #   if a transition is available.
-    function transition!(ndfa::NDFA, character::Char)::Bool
+    function transition!(ndfa::NDFA, character::Char)::Tuple{Bool, Int}
         if length(ndfa.stateInstances) == 0
             return false;
         end
+        transitions = 0;
         newInstances = [];
         for instance in ndfa.stateInstances
             availableX = get(ndfa.xDFA.matrix, instance.x, nothing);
             availableY = get(ndfa.yDFA.matrix, instance.y, nothing);
             if ((availableX !== nothing) && availableX.symbol === character)
                 push!(newInstances, DFAState(availableX.state, instance.y, instance.assignment * "x"))
+                transitions += 1;
             end
             if ((availableY !== nothing) && availableY.symbol === character)
                 push!(newInstances, DFAState(instance.x, availableY.state, instance.assignment * "y"))
+                transitions += 1;
             end
         end
         ndfa.stateInstances = newInstances;
-        return true;
+        return (true, transitions);
     end
 
     # This is just a test case wrapper object to help with code running.
@@ -97,18 +100,21 @@ module InterleaveAnalyzer
     end
 
     # This runs the NDFA for a given string and test string set.
-    function run(x::String, y::String, testString::String)::Tuple{Array{DFAState}, Bool}
+    function run(x::String, y::String, testString::String)::Tuple{Array{DFAState}, Bool, Int}
         ndfa = NDFA(x, y);
+        transitionTotals = 0;
         for symbol in testString
-            if (!transition!(ndfa, symbol))
-                return (ndfa.stateInstances, false);
+            transitionResults = transition!(ndfa, symbol)
+            if (!transitionResults[1])
+                return (ndfa.stateInstances, false, transitionResults[2]);
             end
+            transitionTotals += transitionResults[2];
         end
-        return (ndfa.stateInstances, true);
+        return (ndfa.stateInstances, true, transitionTotals);
     end
 
     # This is a convenience function running the code for test case wrappers.
-    function runTestCase(testCase::TestCase)::Tuple{Array{DFAState}, Bool}
+    function runTestCase(testCase::TestCase)::Tuple{Array{DFAState}, Bool, Int}
         return run(testCase.x, testCase.y, testCase.testString)
     end
 end
